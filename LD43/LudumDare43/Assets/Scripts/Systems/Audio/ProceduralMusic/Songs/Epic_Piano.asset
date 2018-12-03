@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caf10c43ddfaab341bbbeb3fd7ce3bdf, type: 3}
+  m_Name: Epic_Piano
+  m_EditorClassIdentifier: 
+  scale: 4
+  seed: 354348183
+  pitchOffset: 0
+  toneDensity: 0.618
+  positivity: 0
+  BPM: 240
+  beatTone: {fileID: 8300000, guid: c788f4daa83a21a43960952d79566f92, type: 3}
+  beatVolume: 0.048
+  beatGain: 0.121
+  beatDecay: 0.143
+  beatPattern: 0400000004000000040000000000000004000000040000000000000000000000
+  beat: 1
+  chordTone: {fileID: 8300000, guid: c788f4daa83a21a43960952d79566f92, type: 3}
+  chordVolume: 1
+  chordGain: 0.226
+  chordDecay: 0.105
+  ChordChannelCount: 5
+  chordUpdateInterval: 2
+  chordBufferSize: 9
+  chordSize: 5
+  chordGenerators:
+  - {fileID: 114249331196822516, guid: c8fe34cf14c8dd940a99f285cf23fac8, type: 2}
+  harmonicTone: {fileID: 8300000, guid: 2675bafb38e6a82468967aebb4b382ae, type: 3}
+  harmonicVolume: 0.138
+  harmonicGain: 0.534
+  harmonicDecay: 0.237
+  thirdHarmonic: 0
+  fifthHarmonic: 1
+  bassTone: {fileID: 8300000, guid: 2675bafb38e6a82468967aebb4b382ae, type: 3}
+  bassVolume: 0.032
+  bassGain: 0
+  bassDecay: 0
+  chordFollowRatio: 0.11
+  bass: 1

@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caf10c43ddfaab341bbbeb3fd7ce3bdf, type: 3}
+  m_Name: GameOver
+  m_EditorClassIdentifier: 
+  scale: 7
+  seed: 123456
+  pitchOffset: 0
+  toneDensity: 0.53
+  positivity: -1
+  BPM: 196
+  beatTone: {fileID: 8300000, guid: badf8810cf76a5f4cb3b4c8716284b09, type: 3}
+  beatVolume: 0
+  beatGain: 0
+  beatDecay: 0
+  beatPattern: ffffffff
+  beat: 0
+  chordTone: {fileID: 8300000, guid: c040f10c45961a84bb552d8920da6888, type: 3}
+  chordVolume: 0.75
+  chordGain: 0.25
+  chordDecay: 0.23
+  ChordChannelCount: 5
+  chordUpdateInterval: 2
+  chordBufferSize: 5
+  chordSize: 3
+  chordGenerators:
+  - {fileID: 114363821505625596, guid: 7a76ac6e28f95cb45a9942aab42f5658, type: 2}
+  harmonicTone: {fileID: 8300000, guid: 2675bafb38e6a82468967aebb4b382ae, type: 3}
+  harmonicVolume: 0.2
+  harmonicGain: 0.05
+  harmonicDecay: 0.07
+  thirdHarmonic: 1
+  fifthHarmonic: 1
+  bassTone: {fileID: 8300000, guid: 2675bafb38e6a82468967aebb4b382ae, type: 3}
+  bassVolume: 0.1
+  bassGain: 0.02
+  bassDecay: 0.07
+  chordFollowRatio: 0.2
+  bass: 1

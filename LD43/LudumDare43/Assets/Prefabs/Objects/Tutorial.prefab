@@ -1,0 +1,89 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1746783530401856}
+  m_IsPrefabAsset: 1
+--- !u!1 &1746783530401856
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4199710713773672}
+  - component: {fileID: 114689902086415798}
+  m_Layer: 0
+  m_Name: Tutorial
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &4199710713773672
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1746783530401856}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 45.95741, y: 52.523514, z: -0.057392836}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114689902086415798
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1746783530401856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbf7d54e4acb44a4ba0ce9c96b8e6955, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lines:
+  - action: 0
+    line: Welcome to the village of Javalonia, once considered a village so small
+      even the gods would miss it.
+    spriteToDisplay: {fileID: 21300000, guid: 974a4b4d0d4aa164bbc4c9cd5dca3cf6, type: 3}
+  - action: 0
+    line: Today you will find mankind's last stand. A playground to a wrathful God.
+    spriteToDisplay: {fileID: 21300008, guid: 622bd7fc9f7fba64aa0d3be2e903df7a, type: 3}
+  - action: 0
+    line: It is up to you too make the village florish and reach glory long forgotten.
+    spriteToDisplay: {fileID: 0}
+  - action: 0
+    line: Instruct your villagers to collect resources for the gods by selecting them
+      and have them look around. They will retrieve them and deliver them into the
+      storages.
+    spriteToDisplay: {fileID: 21300000, guid: f7a7fefc615166c498a54de8d7a846af, type: 3}
+  - action: 0
+    line: More villagers are expected to be born if there is 50 of each resource in
+      the storages and at least two villagers are resting in the same house.
+    spriteToDisplay: {fileID: 21300000, guid: 3e69706c7d8947643b7e15394499e7b6, type: 3}
+  - action: 0
+    line: The greedy Gods will periodically request you provide them with resources.
+      Press the buttons at the bottom of your screen to comply.
+    spriteToDisplay: {fileID: 21300000, guid: 974a4b4d0d4aa164bbc4c9cd5dca3cf6, type: 3}
+  - action: 0
+    line: Rarely the Gods will tease you with an idol. Collect this object with one
+      of your villagers to gain respect and wealth.
+    spriteToDisplay: {fileID: 21300062, guid: 5f13ff04449e0cd408d8a37d3604bede, type: 3}
+  - action: 0
+    line: It is wise to attain to every single one of the wishes a God can impose.
+      Should you not, punishment awaits that can only be resolved by human sacrifice.
+    spriteToDisplay: {fileID: 21300010, guid: 622bd7fc9f7fba64aa0d3be2e903df7a, type: 3}
+  - action: 0
+    line: Your villagers await ...
+    spriteToDisplay: {fileID: 21300000, guid: 3e69706c7d8947643b7e15394499e7b6, type: 3}
+  iconImage: {fileID: 0}

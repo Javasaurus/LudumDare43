@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caf10c43ddfaab341bbbeb3fd7ce3bdf, type: 3}
+  m_Name: Ambient_Reward
+  m_EditorClassIdentifier: 
+  scale: 1
+  seed: 785479964
+  pitchOffset: 0
+  toneDensity: 0.65
+  positivity: 1
+  BPM: 510
+  beatTone: {fileID: 8300000, guid: badf8810cf76a5f4cb3b4c8716284b09, type: 3}
+  beatVolume: 0
+  beatGain: 0
+  beatDecay: 0
+  beatPattern: ffffffff
+  beat: 0
+  chordTone: {fileID: 8300000, guid: c040f10c45961a84bb552d8920da6888, type: 3}
+  chordVolume: 0.52
+  chordGain: 0.17
+  chordDecay: 0.53
+  ChordChannelCount: 4
+  chordUpdateInterval: 3
+  chordBufferSize: 3
+  chordSize: 4
+  chordGenerators:
+  - {fileID: 114249331196822516, guid: c8fe34cf14c8dd940a99f285cf23fac8, type: 2}
+  harmonicTone: {fileID: 8300000, guid: f342733533972a04aa64fc1b071c629a, type: 3}
+  harmonicVolume: 0.12
+  harmonicGain: 0.02
+  harmonicDecay: 0.02
+  thirdHarmonic: 1
+  fifthHarmonic: 0
+  bassTone: {fileID: 8300000, guid: 9b47f585ac399bb43ae3e1a16f1b1aab, type: 3}
+  bassVolume: 0.17
+  bassGain: 0.07
+  bassDecay: 0.05
+  chordFollowRatio: 0.24
+  bass: 1
