@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class AudioManager : MonoBehaviour
 {
+
+    public bool clearPrefs;
     public static string MASTER_VOLUME = "Master";
     public static string AMBIENT_VOLUME = "Ambient";
     public static string SFX_VOLUME = "SFX";
@@ -85,6 +87,13 @@ public class AudioManager : MonoBehaviour
     }
 
 
-
+    public void Update()
+    {
+        if (clearPrefs)
+        {
+            PlayerPrefs.DeleteAll();
+            clearPrefs = false;
+        }
+    }
 }
 
