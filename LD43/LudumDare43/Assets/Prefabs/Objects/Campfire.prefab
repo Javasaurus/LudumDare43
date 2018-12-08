@@ -55,6 +55,7 @@ GameObject:
   - component: {fileID: 4831982896052148}
   - component: {fileID: 212579810311175192}
   - component: {fileID: 114042149492570976}
+  - component: {fileID: 114622784407725218}
   m_Layer: 0
   m_Name: Campfire
   m_TagString: Untagged
@@ -269,6 +270,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fire: {fileID: 1549667690763480}
+--- !u!114 &114622784407725218
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1721760619143864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3360a4cd41315634bbb4a9e604e45ce8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  endColor: {r: 0.6698113, g: 0.6698113, b: 0.6698113, a: 1}
+  glowSpeed: 2.52
 --- !u!114 &114656217961073976
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 212793828213791102}
   - component: {fileID: 114958320039759408}
   - component: {fileID: 65417706298704162}
+  - component: {fileID: 114781158328506786}
   m_Layer: 0
   m_Name: Water
   m_TagString: Untagged
@@ -154,6 +155,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   options:
   - {fileID: 21300060, guid: 5f13ff04449e0cd408d8a37d3604bede, type: 3}
+--- !u!114 &114781158328506786
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1421667058287286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3360a4cd41315634bbb4a9e604e45ce8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  endColor: {r: 0.6698113, g: 0.6698113, b: 0.6698113, a: 1}
+  glowSpeed: 2.52
 --- !u!114 &114958320039759408
 MonoBehaviour:
   m_ObjectHideFlags: 1

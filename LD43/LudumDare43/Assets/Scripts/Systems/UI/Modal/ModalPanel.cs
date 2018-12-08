@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ModalPanel : MonoBehaviour
@@ -22,14 +23,23 @@ public class ModalPanel : MonoBehaviour
             modalPanel = FindObjectOfType<ModalPanel>();
             modalPanel.modalDialogPanelObject.SetActive(false);
             modalPanel.modalActionPromptPanelObject.SetActive(false);
+            modalPanel.modalConfigPanelObject.SetActive(false);
         }
         return modalPanel;
     }
 
     private void OnEnable()
     {
-        UITools.BringToFront(transform);
-        //how isthis still null...
+        ClosePanel();
+    }
+
+    public void Update()
+    {
+        if (SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            modalDialogPanelObject.SetActive(false);
+            modalActionPromptPanelObject.SetActive(false);
+        }
     }
 
     /// <summary>
@@ -39,6 +49,7 @@ public class ModalPanel : MonoBehaviour
     /// <param name="buttonEvents"></param>
     public void PromptUser(string[] buttonText, UnityAction[] buttonEvents)
     {
+        UITools.BringToFront(transform);
         GameStateManager.INSTANCE.currentState = GameStateManager.GameState.DIALOG;
         modalActionPromptPanelObject.SetActive(true);
         DisableButtons();
@@ -58,12 +69,16 @@ public class ModalPanel : MonoBehaviour
     /// <param name="buttonEvents"></param>
     public void DialogUser(string question, string[] buttonText, UnityAction[] buttonEvents)
     {
+        UITools.BringToFront(transform);
         if (GameStateManager.INSTANCE != null)
         {
             GameStateManager.INSTANCE.currentState = GameStateManager.GameState.DIALOG;
         }
         iconImage.gameObject.SetActive(false);
+        modalActionPromptPanelObject.SetActive(false);
+        modalConfigPanelObject.SetActive(false);
         modalDialogPanelObject.SetActive(true);
+        modalDialogPanelObject.transform.localScale = Vector3.one;
         DisableButtons();
         for (int i = 0; i < buttonText.Length; i++)
         {
@@ -85,6 +100,7 @@ public class ModalPanel : MonoBehaviour
         DialogUser(question, buttonText, buttonEvents);
         iconImage.gameObject.SetActive(true);
         iconImage.sprite = image;
+
     }
 
     /// <summary>
@@ -130,7 +146,11 @@ public class ModalPanel : MonoBehaviour
     {
         modalDialogPanelObject.SetActive(false);
         modalActionPromptPanelObject.SetActive(false);
-        StartCoroutine(WaitForFeedback());
+        modalConfigPanelObject.SetActive(false);
+        if (GameStateManager.INSTANCE != null)
+        {
+            StartCoroutine(WaitForFeedback());
+        }
     }
 
     private IEnumerator WaitForFeedback()

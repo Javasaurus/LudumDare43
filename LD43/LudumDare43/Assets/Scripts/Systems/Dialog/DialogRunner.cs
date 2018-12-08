@@ -38,7 +38,10 @@ public class DialogRunner : MonoBehaviour
 
     public void StartDialog()
     {
-        ProceduralMusicChanger.INSTANCE.SetMusicState(ProceduralMusicChanger.MusicState.AMBIENT);
+        if (ProceduralMusicChanger.INSTANCE != null)
+        {
+            ProceduralMusicChanger.INSTANCE.SetMusicState(ProceduralMusicChanger.MusicState.AMBIENT);
+        }
         dialogIndex = 0;
         DisplayLine(lines[dialogIndex]);
     }
@@ -72,30 +75,30 @@ public class DialogRunner : MonoBehaviour
         {
             if (dialogIndex == 0)
             {
-                modalPanel.DialogUser(line.spriteToDisplay,line.line, new string[] { "Next", "Skip Tutorial" }, new UnityAction[] { confirmAction, skipTutorialAction });
+                modalPanel.DialogUser(line.spriteToDisplay, line.line, new string[] { "Next", "Skip Tutorial" }, new UnityAction[] { confirmAction, skipTutorialAction });
             }
             else if (dialogIndex == lines.Length - 1)
             {
-                modalPanel.DialogUser(line.spriteToDisplay,line.line, new string[] { "End Conversation" }, new UnityAction[] { skipTutorialAction });
+                modalPanel.DialogUser(line.spriteToDisplay, line.line, new string[] { "End Conversation" }, new UnityAction[] { skipTutorialAction });
             }
             else
             {
-                modalPanel.DialogUser(line.spriteToDisplay,line.line, new string[] { "Prev", "Next", "Skip Tutorial" }, new UnityAction[] { refuteAction, confirmAction, skipTutorialAction });
+                modalPanel.DialogUser(line.spriteToDisplay, line.line, new string[] { "Prev", "Next", "Skip Tutorial" }, new UnityAction[] { refuteAction, confirmAction, skipTutorialAction });
             }
         }
         else
         {
             if (line.action == DialogAction.GOODBYE)
             {
-                modalPanel.DialogUser(line.spriteToDisplay,line.line, new string[] { "Goodbye", "End Conversation" }, new UnityAction[] { confirmAction, skipTutorialAction });
+                modalPanel.DialogUser(line.spriteToDisplay, line.line, new string[] { "Goodbye", "End Conversation" }, new UnityAction[] { confirmAction, skipTutorialAction });
             }
             if (line.action == DialogAction.ACCEPT)
             {
-                modalPanel.DialogUser(line.spriteToDisplay,line.line, new string[] { "OK", }, new UnityAction[] { confirmAction, skipTutorialAction });
+                modalPanel.DialogUser(line.spriteToDisplay, line.line, new string[] { "OK", }, new UnityAction[] { confirmAction, skipTutorialAction });
             }
             if (line.action == DialogAction.DECLINE)
             {
-                modalPanel.DialogUser(line.spriteToDisplay,line.line, new string[] { "No", }, new UnityAction[] { confirmAction, skipTutorialAction });
+                modalPanel.DialogUser(line.spriteToDisplay, line.line, new string[] { "No", }, new UnityAction[] { confirmAction, skipTutorialAction });
             }
         }
     }

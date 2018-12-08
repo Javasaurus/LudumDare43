@@ -25,6 +25,9 @@ public class WorldResource : MonoBehaviour
     protected bool hasLimitedAmount;
     protected Vector3 initialPosition;
 
+    private float shakeTimer;
+    private float shakeDuration = 3f;
+
     public void Start()
     {
         initialPosition = transform.position;
@@ -56,8 +59,6 @@ public class WorldResource : MonoBehaviour
         foreach (Villager villager in villagerSelectionController.activeVillagers)
         {
             villager.SetResourceToGather(this);
-
-            villager.SetTargetTile(targetTile);
         }
         villagerSelectionController.Clear();
         modalPanel.ClosePanel();
@@ -65,6 +66,7 @@ public class WorldResource : MonoBehaviour
 
     private void LateUpdate()
     {
+
         if (amount <= 0)
         {
             transform.position = new Vector3(9999, 9999, 9999);
@@ -86,6 +88,16 @@ public class WorldResource : MonoBehaviour
             }
             refillTimer = Time.time + (60f / refillRatePerMinute);
         }
+
+        if (Time.time < shakeTimer)
+        {
+            transform.localPosition = new Vector3(Mathf.Cos(Time.time*25) * 0.1f, Mathf.Sin(Time.time*25) * 0.1f, transform.localPosition.z);
+        }
+        else
+        {
+            transform.position = initialPosition;
+        }
+
     }
 
     public void Cancel()
@@ -103,6 +115,11 @@ public class WorldResource : MonoBehaviour
         }
     }
 
+    public void setShake()
+    {
+        shakeTimer = Time.time + shakeDuration;
+    }
+
     public int FarmResource()
     {
         int amountToTake = Random.Range(minAmountHarvest, maxAmountHarvest);
@@ -114,10 +131,8 @@ public class WorldResource : MonoBehaviour
 
         amount -= amountToTake;
 
-        if (_animator != null)
-        {
-            _animator.SetTrigger("harvest");
-        }
+
+
         return amountToTake;
     }
 

@@ -11,18 +11,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caf10c43ddfaab341bbbeb3fd7ce3bdf, type: 3}
   m_Name: Ambient
   m_EditorClassIdentifier: 
-  scale: 6
+  scale: 10
   seed: 18416587
   pitchOffset: 0
   toneDensity: 0.751
   positivity: 0
-  BPM: 180
+  BPM: 267
   beatTone: {fileID: 8300000, guid: badf8810cf76a5f4cb3b4c8716284b09, type: 3}
-  beatVolume: 0.104
-  beatGain: 0
-  beatDecay: 0
+  beatVolume: 0.18
+  beatGain: 0.1
+  beatDecay: 0.07
   beatPattern: 00000000
-  beat: 0
+  beat: 1
   chordTone: {fileID: 8300000, guid: c040f10c45961a84bb552d8920da6888, type: 3}
   chordVolume: 0.779
   chordGain: 0.05

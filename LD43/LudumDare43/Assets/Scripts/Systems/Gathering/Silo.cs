@@ -40,7 +40,7 @@ public class Silo : MonoBehaviour
         {
             if (villager.currentState == Villager.VillagerState.DELIVERING && villager.carrying > 0 && villager.getResourceToGather() != null && villager.getResourceToGather().type == type)
             {
-                villager.SetTargetTile(targetTile);
+                villager.RequestMovement(targetTile);
             }
         }
         VillagerSelectionController.GetInstance().Clear();

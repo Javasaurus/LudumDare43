@@ -24,21 +24,13 @@ public class Tile : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    private void LateUpdate()
-    {
-
-    }
-
-
-
     public void OnMouseDown()
     {
         if (GameStateManager.INSTANCE.currentState == GameStateManager.GameState.WAIT_INPUT)
         {
             foreach (Villager villager in VillagerSelectionController.GetInstance().activeVillagers)
             {
-                villager.SetTargetTile(this);
+                villager.RequestMovement(this);
             }
             VillagerSelectionController.GetInstance().Clear();
         }

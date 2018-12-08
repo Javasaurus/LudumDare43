@@ -1,10 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class AStarActor : MonoBehaviour
 {
-    public static int maxSteps = 1000000;
+    public enum State
+    {
+        RUNNING, READY_TO_DELIVER, READY
+    }
+
+    public State state = State.READY;
+
+    public static int maxSteps = 1000;
 
     private VillageGrid grid;
     public List<Tile> currentPath;
@@ -20,27 +28,57 @@ public class AStarActor : MonoBehaviour
         currentPath = new List<Tile>();
     }
 
-    public bool CalculatePath(Tile targetTile, bool estimate)
-    {
+    public Tile nearestTile;
+    public bool success;
 
+
+    public void RunPathfinding(Tile targetTile)
+    {
+        if (calculatingRoutine != null)
+        {
+            StopCoroutine(calculatingRoutine);
+        }
+        calculatingRoutine = StartCoroutine(CalculatePathAsync(targetTile));
+    }
+
+    public void RunPathfinding(Tile startingTile, Tile targetTile)
+    {
+        if (calculatingRoutine != null)
+        {
+            StopCoroutine(calculatingRoutine);
+        }
+        calculatingRoutine = StartCoroutine(CalculatePathAsync(startingTile, targetTile));
+    }
+
+    private IEnumerator CalculatePathAsync(Tile targetTile)
+    {
+        Tile startingTile = getCurrentTile();
+        return CalculatePathAsync(startingTile, targetTile);
+    }
+
+    private IEnumerator CalculatePathAsync(Tile startingTile, Tile targetTile)
+    {
+        success = true;
+        state = State.RUNNING;
+        nearestTile = startingTile;
         currentPath.Clear();
         iterations = 0;
         if (targetTile == null)
         {
             Debug.Log("NO TARGET");
-            return false;
+            success = false;
         }
         List<Node> openList = new List<Node>();
         List<Node> closedList = new List<Node>();
         //get the starting tile
-        Tile startingTile = getCurrentTile();
+
 
         if (isNeighbour(startingTile, targetTile))
         {
-            return true;
+            success = true;
         }
 
-        Tile nearestTile = startingTile;
+
         Node firstNode = new Node(startingTile, targetTile, startingTile);
         float bestGValue = firstNode.g;
         currentNode = firstNode;
@@ -48,7 +86,7 @@ public class AStarActor : MonoBehaviour
 
         while (openList.Count > 0)
         {
-            if (iterations > 1000)
+            if (iterations > maxSteps)
             {
                 break;
             }
@@ -66,78 +104,70 @@ public class AStarActor : MonoBehaviour
             //check if there is no path...
             if (openList.Count == 0 && currentNode.tile != targetTile)
             {
+                nearestTile = currentNode.tile;
                 if (!isNeighbour(currentNode.tile, targetTile))
                 {
                     currentPath.Clear();
-                    if (estimate)
-                    {
-                        if (nearestTile != startingTile)
-                        {
-                            if (Vector3.Distance(nearestTile.transform.position, targetTile.transform.position) < 5f)
-                            {
-                                return CalculatePath(nearestTile, estimate);
-                            }
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                    }
+                    //no path was found in range, check again for nearest tile
+                    success = false;
+                    break;
                 }
                 else
                 {
                     //needs to be a walkable tile, otherwise the target is "locked" in
                     if (currentNode.tile.walkable)
                     {
-                        Debug.Log("Last tile " + currentNode.tile + " is walkable");
+                        success = true;
                         break;
                     }
                     else
                     {
-                        return false;
+                        success = false;
                     }
                 }
             }
-
-            //put the current tile on the closed so we don't iterate it again
-            openList.Remove(currentNode);
-            closedList.Add(currentNode);
-            //find the neighbours
-            Tile[] neighbours = getNeighbours(currentNode.tile);
-            Node[] neighbourNodes = new Node[neighbours.Length];
-            for (int i = 0; i < neighbours.Length; i++)
+            if (success)
             {
-                //check if this tile is closest
-                float distance = Vector3.Distance(nearestTile.transform.position, targetTile.transform.position);
-
-
-                //CHECK HERE IF THE AGENT CAN WALK THIS METADATA...
-                if (neighbours[i] != null && (neighbours[i].walkable | neighbours[i] == targetTile))
+                //put the current tile on the closed so we don't iterate it again
+                openList.Remove(currentNode);
+                closedList.Add(currentNode);
+                //find the neighbours
+                Tile[] neighbours = getNeighbours(currentNode.tile);
+                Node[] neighbourNodes = new Node[neighbours.Length];
+                for (int i = 0; i < neighbours.Length; i++)
                 {
-                    neighbourNodes[i] = new Node(currentNode.tile, targetTile, neighbours[i]);
-                    if (neighbourNodes[i].g < bestGValue)
+                    //CHECK HERE IF THE AGENT CAN WALK THIS METADATA...
+                    if (neighbours[i] != null && (neighbours[i].walkable | neighbours[i] == targetTile))
                     {
-                        nearestTile = neighbourNodes[i].tile;
-                        bestGValue = neighbourNodes[i].g;
+                        neighbourNodes[i] = new Node(currentNode.tile, targetTile, neighbours[i]);
+                        if (neighbourNodes[i].g < bestGValue)
+                        {
+                            bestGValue = neighbourNodes[i].g;
+                        }
                     }
+
                 }
+
+                foreach (Node child in neighbourNodes)
+                {
+                    //CHECK HERE WHERE THE AGENT CAN WALK...
+                    if (child != null && !ContainsNode(closedList, child))
+                    {
+                        CheckNodeInOpenList(openList, child, currentNode);
+                    }
+
+                }
+
             }
 
-            foreach (Node child in neighbourNodes)
-            {
-                //CHECK HERE WHERE THE AGENT CAN WALK...
-                if (child != null && !ContainsNode(closedList, child))
-                {
-                    CheckNodeInOpenList(openList, child, currentNode);
-                }
-            }
+            yield return null;
 
         }
 
         //reconstruct the path
         List<Tile> tmpPath = new List<Tile>();
 
-        if (targetTile.walkable)
+        if (targetTile.walkable && nearestTile != null && isNeighbour(targetTile, nearestTile))
         {
             tmpPath.Add(targetTile);
         }
@@ -153,10 +183,14 @@ public class AStarActor : MonoBehaviour
             tmpPath.Reverse();
             currentPath = tmpPath;
         }
-        GameObject.FindObjectOfType<DebugTools>().ShowPath(currentPath, Color.white);
-        return true;
 
+        GameObject.FindObjectOfType<DebugTools>().ShowPath(currentPath, Color.white);
+        nearestTile = currentPath.Count == 0 ? startingTile : currentPath.Last();
+        calculatingRoutine = null;
+        state = success ? State.READY_TO_DELIVER : State.READY;
+        yield return null;
     }
+
 
     public bool isNeighbour(Tile currentTile, Tile neighbourAssumption)
     {

@@ -12,36 +12,38 @@ MonoBehaviour:
   m_Name: Ambient_Reward
   m_EditorClassIdentifier: 
   scale: 1
-  seed: 785479964
+  seed: 11829
   pitchOffset: 0
-  toneDensity: 0.65
-  positivity: 1
-  BPM: 510
+  toneDensity: 0.64
+  positivity: 0
+  BPM: 340
   beatTone: {fileID: 8300000, guid: badf8810cf76a5f4cb3b4c8716284b09, type: 3}
   beatVolume: 0
   beatGain: 0
   beatDecay: 0
   beatPattern: ffffffff
   beat: 0
-  chordTone: {fileID: 8300000, guid: c040f10c45961a84bb552d8920da6888, type: 3}
-  chordVolume: 0.52
+  chordTone: {fileID: 8300000, guid: f342733533972a04aa64fc1b071c629a, type: 3}
+  chordVolume: 0.67
   chordGain: 0.17
   chordDecay: 0.53
   ChordChannelCount: 4
-  chordUpdateInterval: 3
-  chordBufferSize: 3
+  chordUpdateInterval: 2
+  chordBufferSize: 4
   chordSize: 4
   chordGenerators:
+  - {fileID: 114363821505625596, guid: 7a76ac6e28f95cb45a9942aab42f5658, type: 2}
+  - {fileID: 114575919849876912, guid: ac4e84e9853639c4aa08e3f6969e5f70, type: 2}
   - {fileID: 114249331196822516, guid: c8fe34cf14c8dd940a99f285cf23fac8, type: 2}
-  harmonicTone: {fileID: 8300000, guid: f342733533972a04aa64fc1b071c629a, type: 3}
-  harmonicVolume: 0.12
-  harmonicGain: 0.02
+  harmonicTone: {fileID: 8300000, guid: c040f10c45961a84bb552d8920da6888, type: 3}
+  harmonicVolume: 0.22
+  harmonicGain: 0.05
   harmonicDecay: 0.02
-  thirdHarmonic: 1
-  fifthHarmonic: 0
-  bassTone: {fileID: 8300000, guid: 9b47f585ac399bb43ae3e1a16f1b1aab, type: 3}
+  thirdHarmonic: 0
+  fifthHarmonic: 1
+  bassTone: {fileID: 8300000, guid: ac9dd24af8781b9469048f039abff1c4, type: 3}
   bassVolume: 0.17
   bassGain: 0.07
   bassDecay: 0.05
   chordFollowRatio: 0.24
-  bass: 1
+  bass: 0

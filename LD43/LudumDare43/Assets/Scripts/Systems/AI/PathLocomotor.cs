@@ -45,11 +45,14 @@ public class PathLocomotor : MonoBehaviour
         grid = GameObject.FindObjectOfType<VillageGrid>();
         currentPath = new List<Tile>();
         onArrive += NotifyArrived;
-        onConfusion += handleConfusion;
     }
 
     public void LateUpdate()
     {
+        if (GameStateManager.INSTANCE != null && GameStateManager.INSTANCE.currentState == GameStateManager.GameState.PAUSED)
+        {
+            return;
+        }
         CheckDirection();
         myAnimator.SetBool("walking", state == State.MOVING);
     }
@@ -62,6 +65,10 @@ public class PathLocomotor : MonoBehaviour
 
     public void Update()
     {
+        if (GameStateManager.INSTANCE != null && GameStateManager.INSTANCE.currentState == GameStateManager.GameState.PAUSED)
+        {
+            return;
+        }
         if (state == State.PAUSED || state == State.ARRIVED)
         {
             return;
@@ -80,19 +87,26 @@ public class PathLocomotor : MonoBehaviour
                 return;
             }
 
-            Vector2 direction = (targetTile.transform.position - currentTile.transform.position).normalized;
-            transform.position += new Vector3(direction.x, direction.y, 0) * Time.deltaTime * movementSpeed;
-            float distanceToTarget = Vector2.Distance(
-                new Vector2(transform.position.x, transform.position.y),
-                new Vector2(targetTile.transform.position.x, targetTile.transform.position.y));
+            Vector2 rawDirection = (targetTile.transform.position - currentTile.transform.position);
+            Vector2 direction = rawDirection.normalized;
 
 
-            float distanceToCurrent = Vector2.Distance(
-            new Vector2(transform.position.x, transform.position.y),
-            new Vector2(currentTile.transform.position.x, currentTile.transform.position.y));
+            Vector2 displacement = new Vector3(direction.x, direction.y, 0) * Time.deltaTime * movementSpeed;
+
+            //clamp to the next tile so we don't under/overshoot
+
+            displacement.x = Mathf.Sign(direction.x) * Mathf.Min(Mathf.Abs(rawDirection.x), Mathf.Abs(displacement.x));
+            displacement.y = Mathf.Sign(direction.y) * Mathf.Min(Mathf.Abs(rawDirection.y), Mathf.Abs(displacement.y));
+
+            transform.position += new Vector3(displacement.x, displacement.y, 0);
+
+            float distanceToTarget = Mathf.Abs(
+                Vector2.Distance(new Vector2(transform.position.x, transform.position.y),
+                new Vector2(targetTile.transform.position.x, targetTile.transform.position.y)
+                ));
 
 
-            if (distanceToTarget < 0.1f)
+            if (distanceToTarget < 0.5f)
             {
                 currentTile = getCurrentTile();
                 transform.position = targetTile.transform.position;
@@ -106,17 +120,21 @@ public class PathLocomotor : MonoBehaviour
 
                 if (currentIndex == currentPath.Count || (!targetTile.walkable && currentIndex == currentPath.Count - 1))
                 {
-
                     //means we arrived
                     onArrive();
                 }
             }
+            else if (distanceToTarget > 1f)
+            {
+                //then we are off the grid which could be a problem
+                transform.position = new Vector3((int)targetTile.transform.position.x, (int)targetTile.transform.position.y, transform.position.z);
+            }
 
             //if the combined distance between the current and the target is larger than 1f we made a big mistake...
-            if ((distanceToCurrent + distanceToTarget) > 2f)
-            {
-                onConfusion();
-            }
+            /*     if ((distanceToCurrent + distanceToTarget) > 2.5f)
+                 {
+                     onConfusion();
+                 }*/
 
         }
         else
@@ -196,18 +214,4 @@ public class PathLocomotor : MonoBehaviour
     }
 
 
-    public void handleConfusion()
-    {
-        state = State.CONFUSED;
-        GameObject.FindObjectOfType<DebugTools>().ShowPath(currentPath, Color.red);
-        StartCoroutine(ResetConfused());
-    }
-
-    private IEnumerator ResetConfused()
-    {
-        yield return new WaitForSeconds(5f);
-
-        //if possible
-        //   state = State.MOVING;
-    }
 }

@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 95823503340023778}
   - component: {fileID: 114625799203687888}
   - component: {fileID: 114746856492066822}
+  - component: {fileID: 114571686434596098}
   m_Layer: 0
   m_Name: Dead_Tree
   m_TagString: Untagged
@@ -91,7 +92,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: d3acbbbc0f05b5c4db4e358334e58afa, type: 2}
+  - {fileID: 2100000, guid: 22db2d5e5fc0c944691c8d289b6c6ff7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -160,6 +161,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &114571686434596098
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1556624480491080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3360a4cd41315634bbb4a9e604e45ce8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  endColor: {r: 0.6698113, g: 0.6698113, b: 0.6698113, a: 1}
+  glowSpeed: 2.52
 --- !u!114 &114625799203687888
 MonoBehaviour:
   m_ObjectHideFlags: 1

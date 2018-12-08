@@ -25,12 +25,14 @@ public class Wheat : WorldResource
     public void Water()
     {
         //move selected units there to farm
-        Tile targetTile = GetComponent<Tile>();
+        VillageGrid grid = GameObject.FindObjectOfType<VillageGrid>();
+
+        Tile targetTile = grid.grid[new Vector2((int)transform.position.x, (int)transform.position.y)];
 
         foreach (Villager villager in villagerSelectionController.activeVillagers)
         {
             //     villager.SetState(Villager.VillagerState.EXECUTING);
-            villager.SetTargetTile(targetTile);
+            villager.RequestMovement(targetTile);
             villager.onArrivedAtLocation += CheckIfCanExecute;
             villager.onStateChange += CancelWatering;
         }

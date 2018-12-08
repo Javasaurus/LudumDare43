@@ -257,7 +257,7 @@ public class MusicGenerator : MonoBehaviour
             if (musicTemplate.bass)
             {
                 bassChannel.channel.pitch = musicTemplate.pitchOffset + Mathf.Pow(1.05946f, semitones[3]);
-                fifthHarmonicChannel.PlayNote(new Note(
+                bassChannel.PlayNote(new Note(
                 musicTemplate.bassVolume,
                 musicTemplate.bassGain,
                 musicTemplate.bassDecay,

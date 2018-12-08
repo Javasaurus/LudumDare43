@@ -11,6 +11,13 @@ public class StateIcon : MonoBehaviour
     public Sprite depressed;
     public Sprite sick;
     public Sprite confused;
+    public Sprite thinking;
+    
+    public Sprite lookingForFood;
+    public Sprite lookingForWater;
+    public Sprite lookingForWood;
+    public Sprite lookingForGold;
+
 
     private float duration = 3f;
     private float timer;
@@ -24,60 +31,92 @@ public class StateIcon : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    private IEnumerator waitToReset()
+    private IEnumerator waitToReset(float duration)
     {
         yield return new WaitForSeconds(duration);
         _spriteRenderer.enabled = false;
     }
 
-    private void ScheduleReset()
+    private void ScheduleReset(float duration)
     {
         if (resetCoroutine != null)
         {
             StopCoroutine(resetCoroutine);
         }
-        resetCoroutine = StartCoroutine(waitToReset());
+        resetCoroutine = StartCoroutine(waitToReset(duration));
+    }
+
+    public void SetLooking(WorldResource.ResourceType type)
+    {
+        Debug.Log("Now looking for " + type);
+        _spriteRenderer.enabled = true;
+        switch (type)
+        {
+            case WorldResource.ResourceType.FOOD:
+                _spriteRenderer.sprite = lookingForFood;
+                break;
+            case WorldResource.ResourceType.GOLD:
+                _spriteRenderer.sprite = lookingForGold;
+                break;
+            case WorldResource.ResourceType.WATER:
+                _spriteRenderer.sprite = lookingForWater;
+                break;
+            case WorldResource.ResourceType.WOOD:
+                _spriteRenderer.sprite = lookingForWood;
+                break;
+            default:
+                setConfused();
+                return;
+        }
+        ScheduleReset(4f);
     }
 
     public void SetGitty()
     {
         _spriteRenderer.enabled = true;
         _spriteRenderer.sprite = gitty;
-        ScheduleReset();
+        ScheduleReset(4f);
     }
 
     public void SetHappy()
     {
         _spriteRenderer.enabled = true;
         _spriteRenderer.sprite = happy;
-        ScheduleReset();
+        ScheduleReset(4f);
     }
 
     public void SetSad()
     {
         _spriteRenderer.enabled = true;
         _spriteRenderer.sprite = sad;
-        ScheduleReset();
+        ScheduleReset(4f);
     }
 
     public void SetDepressed()
     {
         _spriteRenderer.enabled = true;
         _spriteRenderer.sprite = depressed;
-        ScheduleReset();
+        ScheduleReset(4f);
     }
 
     public void SetSick()
     {
         _spriteRenderer.enabled = true;
         _spriteRenderer.sprite = sick;
-        ScheduleReset();
+        ScheduleReset(4f);
     }
 
     public void setConfused()
     {
         _spriteRenderer.enabled = true;
         _spriteRenderer.sprite = confused;
-        ScheduleReset();
+        ScheduleReset(4f);
+    }
+
+    public void SetThinking()
+    {
+        _spriteRenderer.enabled = true;
+        _spriteRenderer.sprite = thinking;
+        ScheduleReset(4f);
     }
 }

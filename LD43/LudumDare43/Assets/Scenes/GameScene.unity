@@ -1828,13 +1828,23 @@ MonoBehaviour:
   godDialogIcon: {fileID: 21300000, guid: f1769553f4d00334f847a13a7d3e47db, type: 3}
   idolHuntPrefab: {fileID: 1059371023162010, guid: cdda3e66d174ae94c93a7ce86b9b6f31,
     type: 2}
-  chanceForSacrificeCall: 0.2
-  chanceForIdolHunt: 0.6
-  chanceDelay: 60
+  forceNextIdolHunt: 0
+  forceNextPunishment: 0
+  time: 0
+  UpperTimeLimit: 180
+  timeTillGuaranteedNext: 0
+  chanceForSacrificeCall: 0.33
+  chanceForIdolHunt: 0.25
+  chanceDelay: 50
   chanceTimer: 0
-  timeToSacrifice: 180
+  timeToSacrifice: 30
   sacrificeTimer: 0
   SacrificeCall: {fileID: 8300000, guid: 780dc4a8b03a63b488feabfa40a33f56, type: 3}
+  villagerButton: {fileID: 1386910466}
+  woodButton: {fileID: 1125482597}
+  foodButton: {fileID: 1027235637}
+  waterButton: {fileID: 1456012512}
+  goldButton: {fileID: 1096742110}
   killsPerMinute: 3
   killTimer: 0
   timeSincePunishCall: 0
@@ -8203,9 +8213,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6391c9a8c0b5331429e51500894589c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  amplitude: 3
-  frequency: 16
+  amplitude: 0.73
+  frequency: 12.64
   decreaseFactor: 1
+  target: {fileID: 1364532440}
 --- !u!114 &282172339
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9047,6 +9058,11 @@ Prefab:
     - target: {fileID: 1348993182558200, guid: b39cc51e777db7f42872049fd78a32bb, type: 2}
       propertyPath: m_Name
       value: Villager (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 114960532052812362, guid: b39cc51e777db7f42872049fd78a32bb,
+        type: 2}
+      propertyPath: movementState
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b39cc51e777db7f42872049fd78a32bb, type: 2}
@@ -11170,7 +11186,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 25
+  orthographic size: 10
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -11683,6 +11699,41 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114960532052812362, guid: b39cc51e777db7f42872049fd78a32bb,
+        type: 2}
+      propertyPath: movementState
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114570430566836298, guid: b39cc51e777db7f42872049fd78a32bb,
+        type: 2}
+      propertyPath: thinking
+      value: 
+      objectReference: {fileID: 21300018, guid: 3d1eb735c445ca44eb9679a086126081,
+        type: 3}
+    - target: {fileID: 114570430566836298, guid: b39cc51e777db7f42872049fd78a32bb,
+        type: 2}
+      propertyPath: lookingForFood
+      value: 
+      objectReference: {fileID: 21300026, guid: 3d1eb735c445ca44eb9679a086126081,
+        type: 3}
+    - target: {fileID: 114570430566836298, guid: b39cc51e777db7f42872049fd78a32bb,
+        type: 2}
+      propertyPath: lookingForWater
+      value: 
+      objectReference: {fileID: 21300028, guid: 3d1eb735c445ca44eb9679a086126081,
+        type: 3}
+    - target: {fileID: 114570430566836298, guid: b39cc51e777db7f42872049fd78a32bb,
+        type: 2}
+      propertyPath: lookingForWood
+      value: 
+      objectReference: {fileID: 21300024, guid: 3d1eb735c445ca44eb9679a086126081,
+        type: 3}
+    - target: {fileID: 114570430566836298, guid: b39cc51e777db7f42872049fd78a32bb,
+        type: 2}
+      propertyPath: lookingForGold
+      value: 
+      objectReference: {fileID: 21300030, guid: 3d1eb735c445ca44eb9679a086126081,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b39cc51e777db7f42872049fd78a32bb, type: 2}
   m_IsPrefabAsset: 0
@@ -13787,10 +13838,10 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: x999999
+  m_text: x999
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e331cf2303d757740a1aa81a8b107cd5, type: 2}
-  m_sharedMaterial: {fileID: 21061331498547508, guid: e331cf2303d757740a1aa81a8b107cd5,
+  m_fontAsset: {fileID: 11400000, guid: 740df88129ed00448a0355f17aaafd54, type: 2}
+  m_sharedMaterial: {fileID: 21646066304252280, guid: 740df88129ed00448a0355f17aaafd54,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -13856,7 +13907,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 467651467}
-    characterCount: 7
+    characterCount: 4
     spriteCount: 0
     spaceCount: 0
     wordCount: 1
@@ -15814,10 +15865,10 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: x999999
+  m_text: x999
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e331cf2303d757740a1aa81a8b107cd5, type: 2}
-  m_sharedMaterial: {fileID: 21061331498547508, guid: e331cf2303d757740a1aa81a8b107cd5,
+  m_fontAsset: {fileID: 11400000, guid: 740df88129ed00448a0355f17aaafd54, type: 2}
+  m_sharedMaterial: {fileID: 21646066304252280, guid: 740df88129ed00448a0355f17aaafd54,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -15883,7 +15934,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 530176548}
-    characterCount: 7
+    characterCount: 4
     spriteCount: 0
     spaceCount: 0
     wordCount: 1
@@ -16225,9 +16276,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce9a4b77f52773a4f913afe300870073, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Boundary: 50
-  speed: 5
-  FreeMouseMode: 0
+  Boundary: 10
+  speed: 15
+  movement: {x: 0, y: 0}
 --- !u!114 &534669907
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19851,7 +19902,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &641556574
 Transform:
   m_ObjectHideFlags: 0
@@ -19860,7 +19911,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 641556573}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 53, y: 54, z: 1}
+  m_LocalPosition: {x: 52, y: 55, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 0.099999994}
   m_Children: []
   m_Father: {fileID: 260694274}
@@ -20060,7 +20111,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &647808019
 RectTransform:
   m_ObjectHideFlags: 0
@@ -22477,6 +22528,11 @@ Prefab:
     - target: {fileID: 1348993182558200, guid: b39cc51e777db7f42872049fd78a32bb, type: 2}
       propertyPath: m_Name
       value: Villager (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 114960532052812362, guid: b39cc51e777db7f42872049fd78a32bb,
+        type: 2}
+      propertyPath: movementState
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b39cc51e777db7f42872049fd78a32bb, type: 2}
@@ -26710,6 +26766,11 @@ Prefab:
       propertyPath: m_Name
       value: Villager (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 114960532052812362, guid: b39cc51e777db7f42872049fd78a32bb,
+        type: 2}
+      propertyPath: movementState
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b39cc51e777db7f42872049fd78a32bb, type: 2}
   m_IsPrefabAsset: 0
@@ -30684,6 +30745,7 @@ GameObject:
   - component: {fileID: 1027235636}
   - component: {fileID: 1027235635}
   - component: {fileID: 1027235634}
+  - component: {fileID: 1027235637}
   m_Layer: 0
   m_Name: Button
   m_TagString: Untagged
@@ -30795,6 +30857,19 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1027235632}
   m_CullTransparentMesh: 0
+--- !u!114 &1027235637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1027235632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c178354c0040154690b6eb741c0d703, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  endColor: {r: 1, g: 0, b: 0, a: 0.8117647}
+  glowSpeed: 10.38
 --- !u!1 &1032473293
 GameObject:
   m_ObjectHideFlags: 0
@@ -32479,6 +32554,7 @@ GameObject:
   - component: {fileID: 1096742109}
   - component: {fileID: 1096742108}
   - component: {fileID: 1096742107}
+  - component: {fileID: 1096742110}
   m_Layer: 0
   m_Name: Button
   m_TagString: Untagged
@@ -32590,6 +32666,19 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1096742105}
   m_CullTransparentMesh: 0
+--- !u!114 &1096742110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1096742105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c178354c0040154690b6eb741c0d703, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  endColor: {r: 1, g: 0, b: 0, a: 0.8117647}
+  glowSpeed: 10.38
 --- !u!1 &1100283735
 GameObject:
   m_ObjectHideFlags: 0
@@ -33429,6 +33518,7 @@ GameObject:
   - component: {fileID: 1125482596}
   - component: {fileID: 1125482595}
   - component: {fileID: 1125482594}
+  - component: {fileID: 1125482597}
   m_Layer: 0
   m_Name: Button
   m_TagString: Untagged
@@ -33540,6 +33630,19 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1125482592}
   m_CullTransparentMesh: 0
+--- !u!114 &1125482597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1125482592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c178354c0040154690b6eb741c0d703, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  endColor: {r: 1, g: 0, b: 0, a: 0.8117647}
+  glowSpeed: 10.38
 --- !u!1 &1127750055
 GameObject:
   m_ObjectHideFlags: 0
@@ -36001,10 +36104,10 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: x999999
+  m_text: x999
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e331cf2303d757740a1aa81a8b107cd5, type: 2}
-  m_sharedMaterial: {fileID: 21061331498547508, guid: e331cf2303d757740a1aa81a8b107cd5,
+  m_fontAsset: {fileID: 11400000, guid: 740df88129ed00448a0355f17aaafd54, type: 2}
+  m_sharedMaterial: {fileID: 21646066304252280, guid: 740df88129ed00448a0355f17aaafd54,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -36070,7 +36173,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1242903459}
-    characterCount: 7
+    characterCount: 4
     spriteCount: 0
     spaceCount: 0
     wordCount: 1
@@ -40762,7 +40865,7 @@ Transform:
   - {fileID: 260694274}
   - {fileID: 1740009752}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1369517394
 GameObject:
@@ -41552,6 +41655,7 @@ GameObject:
   - component: {fileID: 1386910465}
   - component: {fileID: 1386910464}
   - component: {fileID: 1386910463}
+  - component: {fileID: 1386910466}
   m_Layer: 0
   m_Name: Button
   m_TagString: Untagged
@@ -41663,6 +41767,19 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1386910461}
   m_CullTransparentMesh: 0
+--- !u!114 &1386910466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1386910461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c178354c0040154690b6eb741c0d703, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  endColor: {r: 1, g: 0, b: 0, a: 0.8117647}
+  glowSpeed: 10.38
 --- !u!1 &1392220310
 GameObject:
   m_ObjectHideFlags: 0
@@ -41805,7 +41922,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4199710713773672, guid: af7b912aa3cb3684fa85c881e319a4a1, type: 2}
       propertyPath: m_RootOrder
-      value: 5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1746783530401856, guid: af7b912aa3cb3684fa85c881e319a4a1, type: 2}
       propertyPath: m_IsActive
@@ -44888,6 +45005,7 @@ GameObject:
   - component: {fileID: 1456012511}
   - component: {fileID: 1456012510}
   - component: {fileID: 1456012509}
+  - component: {fileID: 1456012512}
   m_Layer: 0
   m_Name: Button
   m_TagString: Untagged
@@ -44999,6 +45117,19 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1456012507}
   m_CullTransparentMesh: 0
+--- !u!114 &1456012512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1456012507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c178354c0040154690b6eb741c0d703, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  endColor: {r: 1, g: 0, b: 0, a: 0.8117647}
+  glowSpeed: 10.38
 --- !u!1 &1460243363
 GameObject:
   m_ObjectHideFlags: 0
@@ -46768,7 +46899,7 @@ ParticleSystem:
     serializedVersion: 5
     enabled: 1
     type: 4
-    angle: 14.422303
+    angle: 72.147385
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
@@ -46798,7 +46929,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 8.475452
+      value: 30.54059
       mode: 0
       spread: 0
       speed:
@@ -46917,7 +47048,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 100
+      scalar: 250
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -51046,10 +51177,10 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: x999999
+  m_text: x999
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e331cf2303d757740a1aa81a8b107cd5, type: 2}
-  m_sharedMaterial: {fileID: 21061331498547508, guid: e331cf2303d757740a1aa81a8b107cd5,
+  m_fontAsset: {fileID: 11400000, guid: 740df88129ed00448a0355f17aaafd54, type: 2}
+  m_sharedMaterial: {fileID: 21646066304252280, guid: 740df88129ed00448a0355f17aaafd54,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -51115,7 +51246,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1520352780}
-    characterCount: 7
+    characterCount: 4
     spriteCount: 0
     spaceCount: 0
     wordCount: 1
@@ -54250,7 +54381,7 @@ Transform:
   m_Children:
   - {fileID: 1103441520}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1611946364
 GameObject:
@@ -55940,7 +56071,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1678879946}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 28109eb63eb616b4a90f6caa5e6b6556, type: 3}
   m_Name: 
@@ -58509,10 +58640,10 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: x999999
+  m_text: x999
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e331cf2303d757740a1aa81a8b107cd5, type: 2}
-  m_sharedMaterial: {fileID: 21061331498547508, guid: e331cf2303d757740a1aa81a8b107cd5,
+  m_fontAsset: {fileID: 11400000, guid: 740df88129ed00448a0355f17aaafd54, type: 2}
+  m_sharedMaterial: {fileID: 21646066304252280, guid: 740df88129ed00448a0355f17aaafd54,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -58578,7 +58709,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1757971730}
-    characterCount: 7
+    characterCount: 4
     spriteCount: 0
     spaceCount: 0
     wordCount: 1
@@ -64154,7 +64285,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1791846819
 Transform:
   m_ObjectHideFlags: 0
@@ -73998,6 +74129,11 @@ Prefab:
     - target: {fileID: 1348993182558200, guid: b39cc51e777db7f42872049fd78a32bb, type: 2}
       propertyPath: m_Name
       value: Villager (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 114960532052812362, guid: b39cc51e777db7f42872049fd78a32bb,
+        type: 2}
+      propertyPath: movementState
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b39cc51e777db7f42872049fd78a32bb, type: 2}

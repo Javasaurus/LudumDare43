@@ -2,6 +2,7 @@
 
 public class PerlinNoiseChordGenerator : ChordGenerator
 {
+    public float frequency = 15000f;
     private float currentPerlinX = 0;
     private float currentPerlinY = 0;
 
@@ -38,7 +39,7 @@ public class PerlinNoiseChordGenerator : ChordGenerator
     {
         currentPerlinX += 1.5f;
         currentPerlinY = Time.deltaTime * 3f;
-        float myNote = (Mathf.PerlinNoise(currentPerlinX, currentPerlinY) * scale.Length); ;
+        float myNote = (Mathf.PerlinNoise(currentPerlinX / frequency, currentPerlinY / frequency) * scale.Length); ;
         return Mathf.RoundToInt(myNote);
     }
 

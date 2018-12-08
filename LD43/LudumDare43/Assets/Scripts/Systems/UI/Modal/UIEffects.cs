@@ -14,6 +14,11 @@ public class UIEffects : MonoBehaviour
 
     public void OnEnable()
     {
+        Open();
+    }
+
+    public void Open()
+    {
         if (scaleRoutine == null)
         {
             scaleRoutine = StartCoroutine(ScaleOverTime(transform));
@@ -39,7 +44,7 @@ public class UIEffects : MonoBehaviour
         while (currentTime <= time)
         {
             transform.localScale = Vector3.Lerp(originalScale, destinationScale, currentTime / time);
-            currentTime += Time.deltaTime;
+            currentTime += 0.1f;
             yield return null;
         }
         transform.localScale = destinationScale;

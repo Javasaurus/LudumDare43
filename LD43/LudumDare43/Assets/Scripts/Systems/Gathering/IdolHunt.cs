@@ -22,32 +22,11 @@ public class IdolHunt : MonoBehaviour
         villagerSelectionController = GameObject.FindObjectOfType<VillagerSelectionController>();
         grid = GameObject.FindObjectOfType<VillageGrid>();
         //set the location of this object to a certain tile as a child of said tile (mimic a resource)
-        Tile parent = findRandomParentTile();
-        transform.SetParent(parent.transform);
-        transform.localPosition = Vector3.zero;
         modalPanel = ModalPanel.GetInstance();
         confirmAction = new UnityAction(CollectIdol);
         refuteAction = new UnityAction(Cancel);
     }
 
-
-    private Tile findRandomParentTile()
-    {
-        Vector2 position = new Vector2(Random.Range(0, VillageGrid.GAME_SIZE.x), Random.Range(0, VillageGrid.GAME_SIZE.y));
-        Tile tile = grid.grid[position];
-        int attempts = 0;
-        while (tile.metaData.type != TileMetaData.TileType.PLACEHOLDER)
-        {
-            position = new Vector2(Random.Range(0, VillageGrid.GAME_SIZE.x), Random.Range(0, VillageGrid.GAME_SIZE.y));
-            tile = grid.grid[position];
-            attempts++;
-            if (attempts > 100)
-            {
-                break;
-            }
-        }
-        return tile;
-    }
 
     public void OnMouseOver()
     {

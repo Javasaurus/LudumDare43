@@ -9,16 +9,16 @@ public class CameraShake : MonoBehaviour
     private Vector3 targetPos;
     public float decreaseFactor = 1.0f;
     private Vector3 originalPos;
-
+    public GameObject target;
 
     private void OnEnable()
     {
-        originalPos = Camera.main.transform.localPosition;
+        originalPos = target.transform.localPosition;
     }
 
     private void OnDisable()
     {
-        Camera.main.transform.localPosition = originalPos;
+        target.transform.localPosition = originalPos;
     }
 
     private void Update()
@@ -28,6 +28,6 @@ public class CameraShake : MonoBehaviour
             targetPos = originalPos + Random.insideUnitSphere * amplitude;
             timer = Time.time + (1 / frequency);
         }
-        Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, targetPos, Time.deltaTime);
+        target.transform.localPosition = Vector3.Lerp(target.transform.localPosition, targetPos, Time.deltaTime);
     }
 }

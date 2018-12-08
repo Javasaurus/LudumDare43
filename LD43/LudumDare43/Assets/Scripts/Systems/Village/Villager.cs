@@ -8,7 +8,12 @@ public class Villager : MonoBehaviour
 
     public enum VillagerState
     {
-        IDLE, SACRIFICED, MOVING, HARVEST_REQUESTED, HARVESTING, /*EXECUTING,*/ DELIVERING, IN_HOUSE
+        HARVESTING, TARGET_HARVEST_REQUESTED, GENERIC_HARVEST_REQUESTED, MOVEMENT_REQUESTED, IDLE, SACRIFICED, SACRIFICED_REQUESTED, DELIVERING, DELIVERED, IN_HOUSE
+    }
+
+    public enum VillagerMovementState
+    {
+        PATH_REQUEST, PATH_CALCULATING, PATH_FOLLOW, PATH_COMPLETED, IDLE
     }
 
     public string villagerName;
@@ -16,13 +21,12 @@ public class Villager : MonoBehaviour
     public VillagerState currentState;
     public VillagerState previousState;
 
-    public Tile targetTile;
+    public VillagerMovementState movementState;
+
     private SpriteRenderer _renderer;
     private AStarActor aStarActor;
     public PathLocomotor pathLocomotor;
     public bool active;
-
-    private List<Tile> avoidanceTiles;
 
     private ModalPanel modalPanel;
 
@@ -35,10 +39,6 @@ public class Villager : MonoBehaviour
     public SpriteRenderer clothesRenderer;
 
     public WorldResource resourceToGather;
-    public WorldResource previousResource;
-
-
-    public Silo targetSilo;
 
     public int carrying;
 
@@ -50,6 +50,7 @@ public class Villager : MonoBehaviour
     private float idleStart;
 
     private ScanForResources resourceScanner;
+    public WorldResource.ResourceType resourceToFind;
     private StateIcon icon;
 
 
@@ -58,23 +59,28 @@ public class Villager : MonoBehaviour
 
     public delegate void OnTargetChange(Villager villager);
     public OnTargetChange onArrivedAtLocation;
+    internal House house;
+
+
+    //Delegates on arive
+    public void HandleArrived()
+    {
+        movementState = VillagerMovementState.PATH_COMPLETED;
+        onArrivedAtLocation(this);
+        GameDecisionEffects.PlayConfirmSound();
+    }
+
 
     private void NotifyChange(Villager villager)
     {
-
-        //       Debug.Log(villager.villagerName + " is now " + villager.currentState);   //       if (previousState == VillagerState.SACRIFICED & state != VillagerState.SACRIFICED)
         {
             onArrivedAtLocation -= Altar.INSTANCE.SacrificeVillager;
-            avoidanceTiles.Clear();
         }
     }
 
     private void NotifyTarget(Villager villager)
     {
-        if (targetTile != null)
-        {
-            //     Debug.Log(villager.villagerName + " is now heading to" + targetTile.name);
-        }
+
     }
 
     public void OnDisable()
@@ -85,7 +91,6 @@ public class Villager : MonoBehaviour
 
     public void OnEnable()
     {
-        avoidanceTiles = new List<Tile>();
         onStateChange += NotifyChange;
         onArrivedAtLocation += NotifyTarget;
         if (villagerName == "")
@@ -96,7 +101,7 @@ public class Villager : MonoBehaviour
         resourceScanner = GetComponent<ScanForResources>();
         confirmAction = new UnityAction(PromptSacrifice);
         refuteAction = new UnityAction(Cancel);
-        sacrificeAction = new UnityAction(ExecuteSacrifice);
+        sacrificeAction = new UnityAction(HandleSacrificePrompt);
         dropOffAction = new UnityAction(DropOffLoad);
         dropAction = new UnityAction(DropLoad);
 
@@ -106,18 +111,90 @@ public class Villager : MonoBehaviour
         villagerAnimator = GetComponent<Animator>();
     }
 
+    public void OnDestroy()
+    {
+        VillagerSelectionController.GetInstance().allVillagers.Remove(this);
+    }
+
+    public void Awake()
+    {
+        aStarActor = GetComponent<AStarActor>();
+        pathLocomotor = GetComponent<PathLocomotor>();
+        pathLocomotor.onArrive += HandleArrived;
+        //      pathLocomotor.onConfusion += HandleConfused;
+        _renderer = GetComponent<SpriteRenderer>();
+        VillagerSelectionController.GetInstance().allVillagers.Add(this);
+    }
+
+    public void Update()
+    {
+        if (GameStateManager.INSTANCE != null && GameStateManager.INSTANCE.currentState == GameStateManager.GameState.PAUSED)
+        {
+            return;
+        }
+
+        //Check end of movement
+        switch (movementState)
+        {
+            case VillagerMovementState.PATH_REQUEST:
+                HandleAStar();
+                break;
+            case VillagerMovementState.PATH_COMPLETED:
+                switch (currentState)
+                {
+                    case VillagerState.TARGET_HARVEST_REQUESTED:
+                        HandleHarvestStart();
+                        break;
+                    case VillagerState.SACRIFICED:
+                        Altar.INSTANCE.SacrificeVillager(this);
+                        break;
+                    case VillagerState.DELIVERING:
+                        HandleDelivery();
+                        break;
+                }
+                movementState = VillagerMovementState.IDLE;
+                break;
+        }
+
+        //Chek AI requests
+        switch (currentState)
+        {
+            case VillagerState.DELIVERING:
+                icon.SetLooking(resourceToFind);
+                break;
+            case VillagerState.IDLE:
+                HandleIdle();
+                break;
+            case VillagerState.DELIVERED:
+                HandleHarvestRequest();
+                break;
+            case VillagerState.IN_HOUSE:
+                HandleHouse();
+                break;
+            case VillagerState.MOVEMENT_REQUESTED:
+                HandleMovementRequest();
+                break;
+            case VillagerState.HARVESTING:
+                HandleHarvesting();
+                break;
+            case VillagerState.GENERIC_HARVEST_REQUESTED:
+                HandleHarvestRequest();
+                break;
+            case VillagerState.SACRIFICED_REQUESTED:
+                HandleSacrificeRequest();
+                break;
+        }
+
+    }
+
+
     public void SetResourceToGather(WorldResource worldResource)
     {
-        if (previousResource != null && worldResource.type == previousResource.type)
-        {
-            previousResource = resourceToGather;
-        }
-        else
-        {
-            previousResource = null;
-        }
-        SetState(VillagerState.HARVEST_REQUESTED);
         resourceToGather = worldResource;
+        VillageGrid grid = GameObject.FindObjectOfType<VillageGrid>();
+        Tile resourceTile = grid.grid[new Vector2((int)worldResource.transform.position.x, (int)worldResource.transform.position.y)];
+        SetState(VillagerState.TARGET_HARVEST_REQUESTED);
+        RequestPath(resourceTile);
     }
 
     public WorldResource getResourceToGather()
@@ -125,80 +202,49 @@ public class Villager : MonoBehaviour
         return resourceToGather;
     }
 
-    public void OnDestroy()
-    {
-        VillagerSelectionController.GetInstance().allVillagers.Remove(this);
-    }
-
     public void SetState(VillagerState newState)
     {
         if (newState == VillagerState.IDLE)
         {
-            idleStart = Time.time;
+            idleStart = Time.time + Random.Range(5f, 15f);
         }
         previousState = currentState;
         currentState = newState;
         onStateChange(this);
     }
 
-    public void HandleArrived()
+    public void RequestMovement(Tile tile)
     {
-        onArrivedAtLocation(this);
-        GameDecisionEffects.PlayConfirmSound();
-    }
-
-    private Coroutine pathFindingRoutine;
-
-    public void Awake()
-    {
-        aStarActor = GetComponent<AStarActor>();
-        pathLocomotor = GetComponent<PathLocomotor>();
-        pathLocomotor.onArrive += HandleArrived;
-        pathLocomotor.onConfusion += HandleConfused;
-        _renderer = GetComponent<SpriteRenderer>();
-        VillagerSelectionController.GetInstance().allVillagers.Add(this);
-    }
-
-    public void SetTargetTile(Tile tile)
-    {
-
         if (currentState == VillagerState.SACRIFICED)
         {
             return;
         }
-
-        if (pathFindingRoutine != null)
-        {
-            StopCoroutine(pathFindingRoutine);
-            pathFindingRoutine = null;
-        }
-        targetTile = tile;
-        pathFindingRoutine = StartCoroutine(DoPathfinding());
+        currentState = VillagerState.MOVEMENT_REQUESTED;
+        RequestPath(tile);
     }
 
-    private IEnumerator DoPathfinding()
+    private void RequestPath(Tile tile)
     {
-        //    Debug.Log("Calculating to " + targetTile.transform.position);
+        movementState = (VillagerMovementState.PATH_REQUEST);
+        aStarActor.state = AStarActor.State.READY;
+        aStarActor.RunPathfinding(tile);
+    }
 
-        bool pathFound = aStarActor.CalculatePath(targetTile, true);
-        if (pathFound)
-        {
-            pathLocomotor.setPath(aStarActor.currentPath);
-            GameDecisionEffects.PlayConfirmSound();
-            icon.SetGitty();
-        }
-        else
-        {
-            GameDecisionEffects.PlayDeclineSound();
-            icon.SetSad();
-        }
-        pathFindingRoutine = null;
-
-        yield return null;
+    private void AcceptPathSuggestion()
+    {
+        pathLocomotor.setPath(aStarActor.currentPath);
+        GameDecisionEffects.PlayConfirmSound();
+        icon.SetGitty();
+        aStarActor.state = AStarActor.State.READY;
+        movementState = (VillagerMovementState.PATH_FOLLOW);
     }
 
     public void OnMouseOver()
     {
+        if (GameStateManager.INSTANCE != null && GameStateManager.INSTANCE.currentState == GameStateManager.GameState.PAUSED)
+        {
+            return;
+        }
         if (Input.GetMouseButtonDown(1))
         {
             if (carrying > 0)
@@ -227,39 +273,41 @@ public class Villager : MonoBehaviour
     {
         Cancel();
         resourceToGather = null;
-        LookForResource(WorldResource.ResourceType.GOLD);
+        resourceToFind = WorldResource.ResourceType.GOLD;
+        SetState(VillagerState.GENERIC_HARVEST_REQUESTED);
     }
 
     private void LookForWater()
     {
         Cancel();
         resourceToGather = null;
-        LookForResource(WorldResource.ResourceType.WATER);
+        resourceToFind = WorldResource.ResourceType.WATER;
+        SetState(VillagerState.GENERIC_HARVEST_REQUESTED);
     }
 
     private void LookForWood()
     {
         Cancel();
         resourceToGather = null;
-        LookForResource(WorldResource.ResourceType.WOOD);
+        resourceToFind = WorldResource.ResourceType.WOOD;
+        SetState(VillagerState.GENERIC_HARVEST_REQUESTED);
     }
 
     private void LookForFood()
     {
         Cancel();
         resourceToGather = null;
-        LookForResource(WorldResource.ResourceType.FOOD);
+        resourceToFind = WorldResource.ResourceType.FOOD;
+        SetState(VillagerState.GENERIC_HARVEST_REQUESTED);
     }
 
-
-    public void Cancel()
-    {
-        modalPanel.ClosePanel();
-    }
 
     public void OnMouseDown()
     {
-
+        if (GameStateManager.INSTANCE != null && GameStateManager.INSTANCE.currentState == GameStateManager.GameState.PAUSED)
+        {
+            return;
+        }
         transform.position = new Vector3(
             Mathf.RoundToInt(transform.position.x),
             Mathf.RoundToInt(transform.position.y),
@@ -290,17 +338,11 @@ public class Villager : MonoBehaviour
         modalPanel.DialogUser("Are you sure you want to sacrifice " + villagerName + " ?", new string[] { "Yes", "No" }, new UnityAction[] { sacrificeAction, refuteAction });
     }
 
-    public void ExecuteSacrifice()
+    public void Cancel()
     {
-        Cancel();
-        GameDecisionEffects.PlaySacrificeConfirm();
         modalPanel.ClosePanel();
-
-        Tile altarTile = Altar.INSTANCE.GetComponentInParent<Tile>();
-        SetTargetTile(altarTile);
-        SetState(VillagerState.SACRIFICED);
-        onArrivedAtLocation += Altar.INSTANCE.SacrificeVillager;
     }
+
 
     public void DropOffLoad()
     {
@@ -310,7 +352,7 @@ public class Villager : MonoBehaviour
             Silo silo = Silo.FindTargetSilo(resourceToGather.type);
             if (silo != null)
             {
-                SetTargetTile(silo.GetComponent<Tile>());
+                RequestMovement(silo.GetComponent<Tile>());
             }
         }
     }
@@ -332,75 +374,11 @@ public class Villager : MonoBehaviour
         pathLocomotor.state = PathLocomotor.State.MOVING;
     }
 
-    public void LookForResource(WorldResource.ResourceType type)
-    {
-        attemptsToFind++;
-        if (attemptsToFind > 10)
-        {
-            ReturnHome();
-        }
-        //if the previous thing still exists, go there
-        if (previousResource != null && previousResource.isReady() && previousResource.type == type)
-        {
-            SetResourceToGather(previousResource);
-            SetTargetTile(previousResource.GetComponentInParent<Tile>());
-        }
-        else if (resourceScanner != null)
-        {
-            List<WorldResource> potentialTargets = resourceScanner.Scan(type, 50f);
-            if (potentialTargets.Count > 0)
-            {
-                for (int i = 0; i < potentialTargets.Count; i++)
-                {
-                    resourceToGather = potentialTargets[i];
-                    Tile targetTile = resourceToGather.GetComponentInParent<Tile>();
-                    if (targetTile == null)
-                    {
-                        targetTile = resourceToGather.GetComponent<Tile>();
-                    }
-                    if (targetTile == null)
-                    {
-                        targetTile = resourceToGather.GetComponentInChildren<Tile>();
-                    }
-                    if (targetTile != null && !avoidanceTiles.Contains(targetTile))
-                    {
-                        //stop current pathfinding
-                        if (pathFindingRoutine != null)
-                        {
-                            StopCoroutine(pathFindingRoutine);
-                            pathFindingRoutine = null;
-                        }
-                        //don't estimate, must be exact
-                        bool canAccess = aStarActor.CalculatePath(targetTile, false);
-                        if (canAccess)
-                        {
-                            SetResourceToGather(resourceToGather);
-                            pathLocomotor.setPath(aStarActor.currentPath);
-                            icon.SetGitty();
-                            return;
-                        }
-                    }
-                }
 
-                if (targetTile == null)
-                {
-                    Debug.Log("Did not find other targets");
-                    modalPanel.DialogUser("The villager can not find " + type + " nearby", new string[] { "Ok" }, new UnityAction[] { Cancel });
-                    icon.setConfused();
-                }
-            }
-        }
-        icon.SetSad();
-        Debug.Log("Did not find other targets");
-        resourceToGather = null;
-        SetState(VillagerState.IDLE);
-    }
 
     private void ReturnHome()
     {
-        previousResource = null;
         resourceToGather = null;
-        targetTile = null;
         SetState(VillagerState.IDLE);
         icon.SetSick();
         Vector2 altarPosition = Altar.INSTANCE.transform.position;
@@ -417,149 +395,151 @@ public class Villager : MonoBehaviour
             }
             targetPosition = new Vector2((int)targetPosition.x + Random.Range(1, 5), (int)targetPosition.y + Random.Range(1, 5));
         }
-        SetTargetTile(targetTiles[targetPosition]);
+        RequestMovement(targetTiles[targetPosition]);
     }
 
-    public void Update()
+
+
+    private void HandleAStar()
     {
-
-        if (pathLocomotor.state == PathLocomotor.State.CONFUSED)
+        icon.SetThinking();
+        if (aStarActor.state != AStarActor.State.RUNNING)
         {
-            icon.setConfused();
+            if (aStarActor.success)
+            {
+                AcceptPathSuggestion();
+                if (currentState == VillagerState.GENERIC_HARVEST_REQUESTED)
+                {
+                    SetState(VillagerState.HARVESTING);
+                }
+                if (currentState == VillagerState.SACRIFICED_REQUESTED)
+                {
+                    SetState(VillagerState.SACRIFICED);
+                }
+            }
+            else
+            {
+                SetState(VillagerState.IDLE);
+            }
+            aStarActor.state = AStarActor.State.READY;
         }
-
-
-
-        HandleHarvesting();
-
     }
 
     private void HandleIdle()
     {
-        //make them move if idle for 10 seconds
-        if (currentState == VillagerState.IDLE)
+        if ((Time.time > idleStart))
         {
-            if ((Time.time - idleStart) > 10)
+            //get a random neighbour tile?
+            VillageGrid grid = GameObject.FindObjectOfType<VillageGrid>();
+            Vector2 position = new Vector2(Mathf.RoundToInt(transform.position.x + Random.Range(-2, 2)), Mathf.RoundToInt(transform.position.y + Random.Range(-2, 2)));
+            if (grid.grid.ContainsKey(position))
             {
-                //get a random neighbour tile?
-                VillageGrid grid = GameObject.FindObjectOfType<VillageGrid>();
-                Vector2 position = new Vector2(Mathf.RoundToInt(transform.position.x + Random.Range(-3, 3)), Mathf.RoundToInt(transform.position.y + Random.Range(-3, 3)));
-                if (grid.grid.ContainsKey(position))
-                {
-                    SetTargetTile(grid.grid[position]);
-                }
-                idleStart = Time.time;
+                RequestMovement(grid.grid[position]);
             }
+            idleStart = Time.time + Random.Range(5f, 15f);
         }
     }
 
-    private void HandleHarvesting()
+    private void HandleHouse()
     {
-        //execture harvesting if we are 
+        //
+    }
 
-        if (resourceToGather != null && currentState != VillagerState.HARVESTING && pathLocomotor.state == PathLocomotor.State.ARRIVED & carrying == 0)
+    private void HandleHarvestRequest()
+    {
+        attemptsToFind++;
+        if (attemptsToFind > 10)
         {
-            //sometimes the AI messes up. Be sure to avoid harvesting from a distance...
-            float manhattanDistance = Mathf.Abs(transform.position.x - resourceToGather.transform.position.x) + Mathf.Abs(transform.position.y - resourceToGather.transform.position.y);
-            if (manhattanDistance <= 1)
-            {
-                SetState(VillagerState.HARVESTING);
-                //do the harvesting...
-                villagerAnimator.SetBool("harvesting", true);
-                harvestingTimer = Time.time + resourceToGather.harvestDuration;
-                carrying = resourceToGather.FarmResource();
-            }
-            else
-            {
-                //means something went really wrong with the AI, no time to figure it out so better to find the "next best thing"
-                icon.setConfused();
-                WorldResource.ResourceType tmp = resourceToGather.type;
-                resourceToGather = null;
-                LookForResource(tmp);
-                carrying = 0;
-            }
+            ReturnHome();
         }
-
-
-        if (resourceToGather != null && currentState == VillagerState.HARVESTING & Time.time > harvestingTimer)
-        {                //return to silo AFTER harvesting time
-            targetSilo = Silo.FindTargetSilo(resourceToGather.type);
-            SetTargetTile(targetSilo.GetComponent<Tile>());
-            villagerAnimator.SetBool("harvesting", false);
-            SetState(VillagerState.DELIVERING);
-        }
-
-
-        if (pathLocomotor.state == PathLocomotor.State.ARRIVED & currentState == VillagerState.DELIVERING)
+        // find resource type
+        if (resourceScanner != null)
         {
-            if (targetSilo != null)
+            List<WorldResource> potentialTargets = resourceScanner.Scan(resourceToFind, 50f);
+            icon.SetLooking(resourceToFind);
+            if (potentialTargets.Count > 0)
             {
-                targetSilo.totalAmount += carrying;
-
-                carrying = 0;
-                //try to find a new target
-                icon.SetHappy();
-                StartCoroutine(WaitForNextTarget(targetSilo.type));
-                targetSilo = null;
-                resourceToGather = null;
+                for (int i = 0; i < potentialTargets.Count; i++)
+                {
+                    resourceToGather = potentialTargets[i];
+                    //we request a path to this tile
+                    SetResourceToGather(resourceToGather);
+                    return;
+                }
+            }
+            if (resourceToGather == null)
+            {
+                Debug.Log("Did not find other targets");
+                modalPanel.DialogUser("The villager can not find " + resourceToFind + " nearby", new string[] { "Ok" }, new UnityAction[] { Cancel });
+                icon.SetSick();
                 SetState(VillagerState.IDLE);
             }
         }
     }
 
-    public void HandleConfused()
+    private void HandleHarvestStart()
     {
-        switch (currentState)
+        if (Mathf.Abs(resourceToGather.transform.position.x - transform.position.x) < 2 && Mathf.Abs(resourceToGather.transform.position.y - transform.position.y) < 2)
         {
-            case VillagerState.DELIVERING:
-                //means the path to the silo was lost ... we need to find it again !
-                if (targetSilo != null)
-                {
-                    SetTargetTile(targetSilo.GetComponent<Tile>());
-                }
-                break;
-            case VillagerState.HARVEST_REQUESTED:
-                //try to find another resource nearby...
-                if (resourceToGather != null)
-                {
-                    avoidTile(resourceToGather.transform);
-                    LookForResource(resourceToGather.type);
-                }
-                else
-                {
-                    SetState(VillagerState.IDLE);
-                }
-                break;
-            case VillagerState.SACRIFICED:
-                // Try new pathfinding, avoid the current target tile in the locomotor?
-                if (pathLocomotor.currentTile != null)
-                {
-                    //retry and avoid the next tile
-                    avoidTile(pathLocomotor.currentTile.transform);
-                    SetTargetTile(Altar.INSTANCE.GetComponentInParent<Tile>());
-                }
-                break;
-
+            villagerAnimator.SetBool("harvesting", true);
+            harvestingTimer = Time.time + resourceToGather.harvestDuration;
+            resourceToGather.setShake();
+            SetState(VillagerState.HARVESTING);
+        }
+        else
+        {
+            SetState(VillagerState.GENERIC_HARVEST_REQUESTED);
         }
     }
 
-    private void avoidTile(Transform transform)
+    private void HandleHarvesting()
     {
-        VillageGrid grid = GameObject.FindObjectOfType<VillageGrid>();
-        Vector2 position = new Vector2(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
-        if (grid.grid.ContainsKey(position))
+        if (resourceToGather == null)
         {
-            avoidanceTiles.Add(grid.grid[position]);
+            SetState(VillagerState.IDLE);
         }
+        else if (Time.time > harvestingTimer)
+        {
+            villagerAnimator.SetBool("harvesting", false);
+            Silo targetSilo = Silo.FindTargetSilo(resourceToGather.type);
+            carrying = resourceToGather.FarmResource();
+            RequestPath(targetSilo.GetComponent<Tile>());
+            SetState(VillagerState.DELIVERING);
+        }
+
     }
 
-
-
-    private IEnumerator WaitForNextTarget(WorldResource.ResourceType type)
+    private void HandleDelivery()
     {
-        yield return new WaitForSeconds(3f);
-        LookForResource(type);
+        Silo targetSilo = Silo.FindTargetSilo(resourceToGather.type);
+        targetSilo.totalAmount += carrying;
+        carrying = 0;
+        //try to find a new target
+        icon.SetHappy();
+        targetSilo = null;
+        resourceToGather = null;
+        SetState(VillagerState.DELIVERED);
     }
+
+    private void HandleSacrificeRequest()
+    {
+        RequestPath(Altar.INSTANCE.GetComponentInParent<Tile>());
+        onArrivedAtLocation += Altar.INSTANCE.SacrificeVillager;
+    }
+
+    private void HandleMovementRequest()
+    {
+
+    }
+
+    private void HandleSacrificePrompt()
+    {
+        Cancel();
+        GameDecisionEffects.PlaySacrificeConfirm();
+        modalPanel.ClosePanel();
+        SetState(VillagerState.SACRIFICED_REQUESTED);
+    }
+
 
     public void Kill()
     {

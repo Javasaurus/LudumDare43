@@ -2,54 +2,61 @@
 
 public class CameraMovementManager : MonoBehaviour
 {
+    public bool isFollowing;
 
     public int Boundary = 50;
-    public int speed = 5;
+    public int speed = 15;
 
     private int theScreenWidth;
     private int theScreenHeight;
 
-    public bool FreeMouseMode;
-
+    public Vector2 movement;
     private int currentVillagerIndex = 0;
 
     private void Start()
     {
         theScreenWidth = Screen.width;
         theScreenHeight = Screen.height;
-
     }
 
     private void Update()
     {
         //handle zoom
-
+        movement = Vector2.zero;
         HandleScroll();
 
         if (GameStateManager.INSTANCE != null && GameStateManager.INSTANCE.currentState == GameStateManager.GameState.WAIT_INPUT)
         {
-            Vector2 movement = Vector2.zero;
-            if (FreeMouseMode)
-            {
-                movement = DoFreeMouseMode();
-            }
-            else
+            movement = DoFreeMouseMode();
+            if (movement == Vector2.zero && !isFollowing)
             {
                 movement = DoKeyboardMode();
             }
-
-            transform.position = new Vector3(
-    Mathf.Clamp(transform.position.x + movement.x, 0, VillageGrid.GAME_SIZE.x),
-    Mathf.Clamp(transform.position.y + movement.y, 0, VillageGrid.GAME_SIZE.y),
-    transform.position.z);
+            if (Input.GetMouseButtonDown(0) | Input.GetMouseButtonDown(1))
+            {
+                movement = Vector2.zero;
+            }
+            transform.position = new Vector3(Mathf.Clamp(transform.position.x + movement.x, 0, VillageGrid.GAME_SIZE.x),
+            Mathf.Clamp(transform.position.y + movement.y, 0, VillageGrid.GAME_SIZE.y),
+            transform.position.z);
         }
-
-        if (VillagerSelectionController.GetInstance().activeVillagers.Count > 0)
+        else if (VillagerSelectionController.GetInstance().activeVillagers.Count > 0)
         {
             DoFollowMode(VillagerSelectionController.GetInstance().activeVillagers[0]);
         }
-        else if (Input.GetKey(KeyCode.LeftControl))
+
+        if (movement != Vector2.zero)
         {
+            isFollowing = false;
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            isFollowing = !isFollowing;
+        }
+
+        if (isFollowing)
+        {
+
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
                 currentVillagerIndex++;
@@ -75,7 +82,7 @@ public class CameraMovementManager : MonoBehaviour
     {
         float size = Camera.main.orthographicSize;
         size -= Input.GetAxis("Mouse ScrollWheel") * 5f;
-        size = Mathf.Clamp(size, 3, 10);
+        size = Mathf.Clamp(size, 3, 15);
         Camera.main.orthographicSize = size;
     }
 
@@ -85,14 +92,17 @@ public class CameraMovementManager : MonoBehaviour
         {
             return;
         }
-        transform.position = new Vector3(villager.transform.position.x, villager.transform.position.y, transform.position.z);
+        Vector3 targetPosition = villager.house == null ? villager.transform.position : villager.house.transform.position;
+
+        transform.position = Vector3.Lerp(transform.position,
+            new Vector3(targetPosition.x, targetPosition.y, transform.position.z), 3f * Time.deltaTime);
     }
 
 
     private Vector2 DoKeyboardMode()
     {
 
-        Vector2 movement = new Vector2();
+
 
         if (Input.GetKey(KeyCode.RightArrow))
         {
@@ -123,25 +133,25 @@ public class CameraMovementManager : MonoBehaviour
     private Vector2 DoFreeMouseMode()
     {
 
-        Vector2 movement = new Vector2();
 
-        if (Input.mousePosition.x > theScreenWidth - Boundary)
+
+        if (Input.mousePosition.x > theScreenWidth - Boundary && Input.mousePosition.x < theScreenWidth)
         {
             movement.x = speed * Time.deltaTime;
         }
 
 
-        if (Input.mousePosition.x < 0 + Boundary)
+        if (Input.mousePosition.x < Boundary && Input.mousePosition.x > 0)
         {
             movement.x = -speed * Time.deltaTime;
         }
 
-        if (Input.mousePosition.y > theScreenHeight - Boundary)
+        if (Input.mousePosition.y > theScreenHeight - Boundary && Input.mousePosition.y < theScreenHeight)
         {
             movement.y = +speed * Time.deltaTime;
         }
 
-        if (Input.mousePosition.y < 0 + Boundary)
+        if (Input.mousePosition.y < Boundary && Input.mousePosition.y > 0)
         {
             movement.y = -speed * Time.deltaTime;
         }

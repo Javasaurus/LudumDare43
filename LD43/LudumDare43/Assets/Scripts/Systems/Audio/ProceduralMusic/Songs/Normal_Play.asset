@@ -11,37 +11,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caf10c43ddfaab341bbbeb3fd7ce3bdf, type: 3}
   m_Name: Normal_Play
   m_EditorClassIdentifier: 
-  scale: 1
-  seed: 123456
+  scale: 9
+  seed: 645874
   pitchOffset: 0
-  toneDensity: 0.87
-  positivity: 1
-  BPM: 212
-  beatTone: {fileID: 8300000, guid: badf8810cf76a5f4cb3b4c8716284b09, type: 3}
-  beatVolume: 0
-  beatGain: 0
+  toneDensity: 0.54
+  positivity: 0
+  BPM: 240
+  beatTone: {fileID: 8300000, guid: abd8f627a279b0d43b86819f1b9d47ad, type: 3}
+  beatVolume: 0.29
+  beatGain: 0.07
   beatDecay: 0
-  beatPattern: ffffffff
+  beatPattern: ffffffffffffffffffffffff0c0000000d0000000e000000ffffffffffffffffffffffffffffffffffffffff0e0000000f0000000e000000ffffffffffffffffffffffffffffffffffffffff0d0000000f0000000c000000ffffffffffffffffffffffffffffffffffffffffffffffff0f0000000e0000000d000000ffffffffffffffff00000000
   beat: 0
-  chordTone: {fileID: 8300000, guid: c040f10c45961a84bb552d8920da6888, type: 3}
-  chordVolume: 0.52
-  chordGain: 0.17
-  chordDecay: 0.53
-  ChordChannelCount: 4
-  chordUpdateInterval: 3
-  chordBufferSize: 3
+  chordTone: {fileID: 8300000, guid: 42797d6f918f5fd4a9b70b725246de18, type: 3}
+  chordVolume: 0.04
+  chordGain: 0.01
+  chordDecay: 0.03
+  ChordChannelCount: 8
+  chordUpdateInterval: 2
+  chordBufferSize: 1
   chordSize: 4
   chordGenerators:
   - {fileID: 114249331196822516, guid: c8fe34cf14c8dd940a99f285cf23fac8, type: 2}
-  harmonicTone: {fileID: 8300000, guid: f342733533972a04aa64fc1b071c629a, type: 3}
-  harmonicVolume: 0.12
-  harmonicGain: 0.02
-  harmonicDecay: 0.02
+  - {fileID: 114575919849876912, guid: ac4e84e9853639c4aa08e3f6969e5f70, type: 2}
+  harmonicTone: {fileID: 8300000, guid: 3e30d648fdad4ed43b4e0ae103171ed2, type: 3}
+  harmonicVolume: 0.1
+  harmonicGain: 0.08
+  harmonicDecay: 0.91
   thirdHarmonic: 1
   fifthHarmonic: 0
-  bassTone: {fileID: 8300000, guid: 9b47f585ac399bb43ae3e1a16f1b1aab, type: 3}
-  bassVolume: 0.17
-  bassGain: 0.07
-  bassDecay: 0.05
-  chordFollowRatio: 0.24
+  bassTone: {fileID: 8300000, guid: 3e30d648fdad4ed43b4e0ae103171ed2, type: 3}
+  bassVolume: 0.09
+  bassGain: 0.06
+  bassDecay: 0.02
+  chordFollowRatio: 0.22
   bass: 1

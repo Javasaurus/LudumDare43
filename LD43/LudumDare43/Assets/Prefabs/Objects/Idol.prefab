@@ -19,6 +19,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4602332201371196}
+  - component: {fileID: 114480228623732532}
   - component: {fileID: 65381707167215224}
   m_Layer: 0
   m_Name: Idol
@@ -36,6 +37,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4781780712361050}
   - component: {fileID: 212482704570098018}
+  - component: {fileID: 114285577854165436}
   m_Layer: 0
   m_Name: Graphics
   m_TagString: Untagged
@@ -150,6 +152,30 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &114285577854165436
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1645875891863726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3360a4cd41315634bbb4a9e604e45ce8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  endColor: {r: 0.6698113, g: 0.6698113, b: 0.6698113, a: 1}
+  glowSpeed: 2.52
+--- !u!114 &114480228623732532
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1059371023162010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0e018d76d62d694c8b2ddee8dd629e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114540473817738648
 MonoBehaviour:
   m_ObjectHideFlags: 1

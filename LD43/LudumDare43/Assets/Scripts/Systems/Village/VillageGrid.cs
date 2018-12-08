@@ -29,6 +29,9 @@ public class VillageGrid : MonoBehaviour
 
             placeNodes();
         }
+
+        //remove the unwalkable tiles from the grid, we never used them after placement
+        grid = grid.Where(pair => pair.Value.walkable && pair.Value.metaData.walkable).ToDictionary(pair => pair.Key, pair => pair.Value);
     }
 
     private void placeForest()
@@ -81,8 +84,6 @@ public class VillageGrid : MonoBehaviour
             }
         }
     }
-
-
 
     private void LoadExistingTiles()
     {
@@ -155,11 +156,4 @@ public class VillageGrid : MonoBehaviour
     }
 
 
-
-
-    // Update is called once per frame
-    private void Update()
-    {
-        // we need to figure out how to convert mouse positons to the grid position on the map...
-    }
 }

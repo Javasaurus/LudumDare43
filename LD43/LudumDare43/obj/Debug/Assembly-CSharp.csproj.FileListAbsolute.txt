@@ -166,3 +166,5 @@ D:\Game_Dev\Unity\Projects\LudumDare\LD43\LudumDare43\obj\Debug\Assembly-CSharp.
 D:\Game_Dev\Unity\Projects\LudumDare\LD43\LudumDare43\obj\Debug\Assembly-CSharp.csproj.CopyComplete
 D:\Game_Dev\Unity\Projects\LudumDare\LD43\LudumDare43\obj\Debug\Assembly-CSharp.dll
 D:\Game_Dev\Unity\Projects\LudumDare\LD43\LudumDare43\obj\Debug\Assembly-CSharp.pdb
+D:\Game_Dev\Unity\Projects\LudumDare\LD43\LudumDare43\Temp\bin\Debug\UnityEngine.SpatialTrackingModule.dll
+D:\Game_Dev\Unity\Projects\LudumDare\LD43\LudumDare43\Temp\bin\Debug\UnityEngine.SpatialTrackingModule.xml

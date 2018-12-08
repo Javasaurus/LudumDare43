@@ -44,9 +44,10 @@ public class House : MonoBehaviour
         {
             if (villagersToMonitor.Count <= maxVillagers)
             {
-                villager.SetTargetTile(targetTile);
+                villager.RequestMovement(targetTile);
                 villagersToMonitor.Add(villager);
                 villager.SetState(Villager.VillagerState.IN_HOUSE);
+                villager.house = this;
             }
         }
         VillagerSelectionController.GetInstance().Clear();
@@ -109,7 +110,7 @@ public class House : MonoBehaviour
 
     public void LateUpdate()
     {
-    //    currentPricePerVillager = 100 + VillagerSelectionController.GetInstance().allVillagers.Count * 2;
+        //    currentPricePerVillager = 100 + VillagerSelectionController.GetInstance().allVillagers.Count * 2;
         _animator.SetInteger("occupants", villagersToMonitor.Count);
     }
 
@@ -120,6 +121,7 @@ public class House : MonoBehaviour
             villager.transform.position = new Vector3(transform.position.x, transform.position.y - 1, villager.transform.position.z);
             villager.gameObject.SetActive(true);
             villager.SetState(Villager.VillagerState.IDLE);
+            villager.house = null;
         }
         villagersToMonitor.Clear();
         VillagerSelectionController.GetInstance().Clear();

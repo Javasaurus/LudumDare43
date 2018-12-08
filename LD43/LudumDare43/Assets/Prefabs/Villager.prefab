@@ -116,7 +116,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1348993182558200}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -235,6 +235,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   state: 0
   movementSpeed: 5
+  currentPath: []
+  targetTile: {fileID: 0}
+  currentTile: {fileID: 0}
   currentIndex: 0
 --- !u!114 &114358680373680322
 MonoBehaviour:
@@ -266,6 +269,11 @@ MonoBehaviour:
   depressed: {fileID: 21300016, guid: 3d1eb735c445ca44eb9679a086126081, type: 3}
   sick: {fileID: 21300020, guid: 3d1eb735c445ca44eb9679a086126081, type: 3}
   confused: {fileID: 21300022, guid: 3d1eb735c445ca44eb9679a086126081, type: 3}
+  thinking: {fileID: 21300018, guid: 3d1eb735c445ca44eb9679a086126081, type: 3}
+  lookingForFood: {fileID: 21300026, guid: 3d1eb735c445ca44eb9679a086126081, type: 3}
+  lookingForWater: {fileID: 21300028, guid: 3d1eb735c445ca44eb9679a086126081, type: 3}
+  lookingForWood: {fileID: 21300024, guid: 3d1eb735c445ca44eb9679a086126081, type: 3}
+  lookingForGold: {fileID: 21300030, guid: 3d1eb735c445ca44eb9679a086126081, type: 3}
 --- !u!114 &114587488538409282
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -277,7 +285,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f79183a7bb63a94c8084064ee64e343, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  state: 2
   currentPath: []
+  nearestTile: {fileID: 0}
+  success: 0
 --- !u!114 &114960532052812362
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -289,14 +300,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d344414fcf09284abb9237eb8650f6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 0
-  targetTile: {fileID: 0}
+  villagerName: 
+  currentState: 4
+  previousState: 4
+  movementState: 4
+  pathLocomotor: {fileID: 0}
   active: 0
   clothesRenderer: {fileID: 212199447774346700}
   resourceToGather: {fileID: 0}
-  previousResource: {fileID: 0}
-  targetSilo: {fileID: 0}
   carrying: 0
+  attemptsToFind: 0
+  villagerAnimator: {fileID: 0}
+  resourceToFind: 0
 --- !u!212 &212081952895914430
 SpriteRenderer:
   m_ObjectHideFlags: 1

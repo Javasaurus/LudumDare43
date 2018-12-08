@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Name: Saxophone
   m_EditorClassIdentifier: 
   beatTone: {fileID: 8300000, guid: abd8f627a279b0d43b86819f1b9d47ad, type: 3}
-  chordTone: {fileID: 8300000, guid: 3e30d648fdad4ed43b4e0ae103171ed2, type: 3}
+  chordTone: {fileID: 8300000, guid: 42797d6f918f5fd4a9b70b725246de18, type: 3}
   harmonyTone: {fileID: 8300000, guid: 3e30d648fdad4ed43b4e0ae103171ed2, type: 3}
   bassTone: {fileID: 8300000, guid: 3e30d648fdad4ed43b4e0ae103171ed2, type: 3}

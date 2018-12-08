@@ -43,19 +43,19 @@ public class GameStats : MonoBehaviour
         {
             case WorldResource.ResourceType.FOOD:
                 food = amount;
-                foodTxt.text = "X " + food;
+                foodTxt.text = "X" + food;
                 break;
             case WorldResource.ResourceType.WOOD:
                 wood = amount;
-                woodTxt.text = "X " + wood;
+                woodTxt.text = "X" + wood;
                 break;
             case WorldResource.ResourceType.GOLD:
                 gold = amount;
-                goldTxt.text = "X " + gold;
+                goldTxt.text = "X" + gold;
                 break;
             case WorldResource.ResourceType.WATER:
                 water = amount;
-                waterTxt.text = "X " + water;
+                waterTxt.text = "X" + water;
                 break;
         }
     }
@@ -75,7 +75,10 @@ public class GameStats : MonoBehaviour
     {
         if (!checkVillagers() && GameStateManager.INSTANCE.currentState != GameStateManager.GameState.GAME_OVER)
         {
-            ProceduralMusicChanger.INSTANCE.SetMusicState(ProceduralMusicChanger.MusicState.GAME_OVER);
+            if (ProceduralMusicChanger.INSTANCE != null)
+            {
+                ProceduralMusicChanger.INSTANCE.SetMusicState(ProceduralMusicChanger.MusicState.GAME_OVER);
+            }
             GameStateManager.INSTANCE.currentState = GameStateManager.GameState.GAME_OVER;
             modalPanel.DialogUser("The last of the villagers have perished, per the will of the gods. Sacrifices have been made in vain.",
                 new string[] { "End" }, new UnityAction[] { BackToMain });
@@ -89,8 +92,11 @@ public class GameStats : MonoBehaviour
 
     private void BackToMain()
     {
-        ProceduralMusicChanger.INSTANCE.SetMusicState(ProceduralMusicChanger.MusicState.MAIN_MENU);
         modalPanel.ClosePanel();
+        if (ProceduralMusicChanger.INSTANCE != null)
+        {
+            ProceduralMusicChanger.INSTANCE.SetMusicState(ProceduralMusicChanger.MusicState.MAIN_MENU);
+        }
         SceneManager.LoadScene(0);
     }
 }

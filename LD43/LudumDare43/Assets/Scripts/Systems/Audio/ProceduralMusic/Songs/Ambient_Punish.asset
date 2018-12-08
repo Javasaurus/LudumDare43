@@ -23,7 +23,7 @@ MonoBehaviour:
   beatDecay: 0.07
   beatPattern: ffffffff
   beat: 0
-  chordTone: {fileID: 8300000, guid: c040f10c45961a84bb552d8920da6888, type: 3}
+  chordTone: {fileID: 8300000, guid: f342733533972a04aa64fc1b071c629a, type: 3}
   chordVolume: 0.57
   chordGain: 0.12
   chordDecay: 0.25
@@ -33,15 +33,15 @@ MonoBehaviour:
   chordSize: 4
   chordGenerators:
   - {fileID: 114363821505625596, guid: 7a76ac6e28f95cb45a9942aab42f5658, type: 2}
-  harmonicTone: {fileID: 8300000, guid: f342733533972a04aa64fc1b071c629a, type: 3}
+  harmonicTone: {fileID: 8300000, guid: c040f10c45961a84bb552d8920da6888, type: 3}
   harmonicVolume: 0.43
   harmonicGain: 0.13
   harmonicDecay: 0.08
   thirdHarmonic: 1
   fifthHarmonic: 0
-  bassTone: {fileID: 8300000, guid: 9b47f585ac399bb43ae3e1a16f1b1aab, type: 3}
-  bassVolume: 0.28
-  bassGain: 0.28
-  bassDecay: 0.07
-  chordFollowRatio: 0.48
+  bassTone: {fileID: 8300000, guid: ac9dd24af8781b9469048f039abff1c4, type: 3}
+  bassVolume: 0.44
+  bassGain: 0.35
+  bassDecay: 0.25
+  chordFollowRatio: 0.36
   bass: 1
